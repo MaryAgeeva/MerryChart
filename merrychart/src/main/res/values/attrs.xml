@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BarChart">
+        <attr name="entryWidth" format="dimension" />
+        <attr name="entryColor" format="color" />
+        <attr name="entryTextColor" format="color" />
+        <attr name="xAxisTextColor" format="color" />
+        <attr name="yAxisTextColor" format="color" />
+        <attr name="entryTextSize" format="dimension" />
+        <attr name="xAxisTextSize" format="dimension" />
+        <attr name="yAxisTextSize" format="dimension" />
+        <attr name="gridColor" format="color" />
+        <attr name="emptyDataText" format="string" />
+    </declare-styleable>
+</resources>
