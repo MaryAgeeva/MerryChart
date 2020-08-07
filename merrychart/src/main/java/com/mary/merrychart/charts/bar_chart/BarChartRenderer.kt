@@ -9,6 +9,25 @@ internal class BarChartRenderer(
     context: Context
 ) : ChartRenderer<BarChartEntry>(BarEntriesRenderer(context)) {
 
+    override fun measure(
+        height: Float,
+        width: Float,
+        paddingStart: Float,
+        paddingTop: Float,
+        paddingEnd: Float,
+        paddingBottom: Float
+    ) {
+        super.measure(height, width, paddingStart, paddingTop, paddingEnd, paddingBottom)
+        gridRenderer.createGrid(
+            height,
+            width,
+            paddingStart,
+            paddingTop,
+            paddingEnd,
+            paddingBottom
+        )
+    }
+
     override fun draw(
         canvas: Canvas,
         paddingStart: Float,
@@ -25,13 +44,6 @@ internal class BarChartRenderer(
                 paddingBottom
             )
         else {
-            gridRenderer.createGrid(
-                canvas,
-                paddingStart,
-                paddingTop,
-                paddingEnd,
-                paddingBottom
-            )
             gridRenderer.drawGrid(
                 canvas,
                 paddingStart,

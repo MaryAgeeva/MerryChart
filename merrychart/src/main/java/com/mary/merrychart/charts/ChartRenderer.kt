@@ -7,10 +7,22 @@ import com.mary.merrychart.charts.bar_chart.GridRenderer
 internal abstract class ChartRenderer<T: Entry> (
     protected val entriesRenderer: EntriesRenderer<T>
 ) {
-    internal var width: Float = 0f
-    internal var heigth: Float = 0f
+    private var width: Float = 0f
+    private var height: Float = 0f
 
     protected var gridRenderer = GridRenderer()
+
+    internal open fun measure(
+        height: Float,
+        width: Float,
+        paddingStart: Float,
+        paddingTop: Float,
+        paddingEnd: Float,
+        paddingBottom: Float
+    ) {
+        this.width = width
+        this.height = height
+    }
 
     internal abstract fun draw(
         canvas: Canvas,

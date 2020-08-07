@@ -48,11 +48,11 @@ internal class GridRenderer {
     }
 
     internal fun setXTextSize(size: Float) {
-        xAxisTextPaint.textSize = size
+        xAxisTextPaint.textSize = if(size <= 0f) DEFAULT_X_TEXT_SIZE.dp.toFloat() else size
     }
 
     internal fun setYTextSize(size: Float) {
-        yAxisTextPaint.textSize = size
+        yAxisTextPaint.textSize = if(size <= 0f) DEFAULT_Y_TEXT_SIZE.dp.toFloat() else size
     }
 
     internal fun createValues(
@@ -68,21 +68,25 @@ internal class GridRenderer {
     }
 
     internal fun createGrid(
-        canvas: Canvas,
+        height: Float,
+        width: Float,
         paddingStart: Float,
         paddingTop: Float,
         paddingEnd: Float,
         paddingBottom: Float
     ) {
-        val rowHeight = (canvas.height - paddingTop - paddingBottom - xAxisTextPaint.textSize
-                - X_AXIS_TEXT_PADDING.dp * 2) / 5
+        val rowHeight = (
+            height - paddingTop - paddingBottom - xAxisTextPaint.textSize - X_AXIS_TEXT_PADDING.dp * 2
+        ) / DEFAULT_ROWS_COUNT
         val maxValueLength = yAxisTextPaint.measureText((gridValues?.max?: 0.0).toQuantityString())
-        val textYCenter = (yAxisTextPaint.textSize + (yAxisTextPaint.descent() + yAxisTextPaint.ascent()) / 2) / 2
+        val textYCenter = (
+            yAxisTextPaint.textSize + (yAxisTextPaint.descent() + yAxisTextPaint.ascent()) / 2
+        ) / 2
 
         grid = Grid(
             startX = paddingStart + maxValueLength + Y_AXIS_TEXT_PADDING.dp,
             startY = paddingTop + Y_AXIS_TEXT_PADDING.dp - textYCenter,
-            endX = canvas.width - paddingEnd,
+            endX = width - paddingEnd,
             endY = paddingTop + Y_AXIS_TEXT_PADDING.dp - textYCenter + (rowHeight * 4),
             rowHeight = rowHeight,
             textYCenter = textYCenter,
@@ -162,5 +166,7 @@ internal class GridRenderer {
 
         private const val X_AXIS_TEXT_PADDING = 8f
         private const val Y_AXIS_TEXT_PADDING = 8f
+
+        private const val DEFAULT_ROWS_COUNT = 5
     }
 }

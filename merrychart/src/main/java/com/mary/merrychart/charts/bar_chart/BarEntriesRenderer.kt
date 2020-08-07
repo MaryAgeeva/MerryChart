@@ -13,11 +13,16 @@ import com.mary.merrychart.utils.toQuantityString
 
 internal class BarEntriesRenderer(
     private val context: Context
-) : EntriesRenderer<BarChartEntry>() {
+) : EntriesRenderer<BarChartEntry>(
+    BarAnimationManager()
+) {
 
     private val entriesMap: HashMap<BarChartEntry, Double> = hashMapOf()
 
     internal var entryWidth = DEFAULT_ENTRY_WIDTH.dp.toFloat()
+        set(value) {
+            field = if(value <= 0f) DEFAULT_ENTRY_WIDTH.dp.toFloat() else value
+        }
 
     private val xAxisTextPaint = TextPaint(TextPaint.ANTI_ALIAS_FLAG).apply {
         textSize = DEFAULT_X_TEXT_SIZE.sp
@@ -37,7 +42,7 @@ internal class BarEntriesRenderer(
     }
 
     internal fun setXTextSize(size: Float) {
-        xAxisTextPaint.textSize = size
+        xAxisTextPaint.textSize = if(size <= 0f) DEFAULT_X_TEXT_SIZE.dp.toFloat() else size
     }
 
     override fun calculateEntriesDiff(
