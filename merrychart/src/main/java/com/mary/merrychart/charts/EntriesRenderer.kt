@@ -6,7 +6,7 @@ import android.text.TextPaint
 import androidx.annotation.ColorInt
 import com.mary.merrychart.utils.sp
 
-abstract class EntriesRenderer<T: Entry> {
+internal abstract class EntriesRenderer<T: Entry> {
 
     internal var entriesList : List<T> = listOf()
     internal var valueFormatter : ((Double) -> String)? = null

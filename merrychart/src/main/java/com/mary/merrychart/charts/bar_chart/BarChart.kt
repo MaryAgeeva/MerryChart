@@ -53,11 +53,13 @@ class BarChart @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        /*setMeasuredDimension(
-            MeasureSpec.getSize(widthMeasureSpec),
-            (MeasureSpec.getSize(heightMeasureSpec) / 2)
-        )*/
+        val width = MeasureSpec.getSize(widthMeasureSpec)
+        val height = when(MeasureSpec.getMode(heightMeasureSpec)) {
+            MeasureSpec.AT_MOST -> MeasureSpec.getSize(heightMeasureSpec) / 2
+            MeasureSpec.EXACTLY -> MeasureSpec.getSize(heightMeasureSpec)
+            else -> MeasureSpec.getSize(heightMeasureSpec) / 2
+        }
+        setMeasuredDimension(width, height)
     }
 
     private fun getAttributesFromXML(attrs: AttributeSet) {
