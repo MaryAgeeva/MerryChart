@@ -62,6 +62,8 @@ internal class BarEntriesRenderer(
         else entriesList.size
 
         val columnWidth = (gridEndX - gridStartX) / visibleEntriesCount
+        if(entryWidth >= columnWidth)
+            entryWidth = columnWidth
         val startColumnOffset = (columnWidth / 2) - (entryWidth / 2)
 
         entriesList.forEachIndexed { position, entry ->
