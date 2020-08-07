@@ -7,8 +7,5 @@ internal data class Grid(
     val endY: Float,
     val rowHeight: Float,
     val textYCenter: Float,
-    val maxTextLength: Float,
-    val minValue: Double,
-    val maxValue: Double,
-    val values: List<Double>
+    val maxTextLength: Float
 )

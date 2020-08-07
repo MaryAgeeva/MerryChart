@@ -30,9 +30,7 @@ internal class BarChartRenderer(
                 paddingStart,
                 paddingTop,
                 paddingEnd,
-                paddingBottom,
-                (entriesRenderer.entriesList.minBy { it.value }?.value?: 0.0),
-                (entriesRenderer.entriesList.maxBy { it.value }?.value?: 0.0)
+                paddingBottom
             )
             gridRenderer.drawGrid(
                 canvas,
@@ -41,15 +39,15 @@ internal class BarChartRenderer(
                 paddingEnd,
                 paddingBottom
             )
-            entriesRenderer.draw(
-                canvas,
-                (gridRenderer.grid?.minValue?: 0.0),
-                (gridRenderer.grid?.maxValue?: 0.0),
-                (gridRenderer.grid?.startX?: 0f),
-                (gridRenderer.grid?.endX?: 0f),
-                (gridRenderer.grid?.startY?: 0f),
-                (gridRenderer.grid?.endY?: 0f)
-            )
+            gridRenderer.grid?.let { grid ->
+                entriesRenderer.draw(
+                    canvas,
+                    grid.startX,
+                    grid.endX,
+                    grid.startY,
+                    grid.endY
+                )
+            }
         }
     }
 
@@ -61,11 +59,19 @@ internal class BarChartRenderer(
         (entriesRenderer as? BarEntriesRenderer)?.setXTextSize(size)
     }
 
-    override fun setEntriesList(list: List<BarChartEntry>) {
-        (entriesRenderer as? BarEntriesRenderer)?.setList(list)
-    }
-
     internal fun setEntriesWidth(width: Float) {
         (entriesRenderer as? BarEntriesRenderer)?.entryWidth = width
+    }
+
+    override fun setEntriesList(list: List<BarChartEntry>) {
+        gridRenderer.createValues(
+            (list.minBy { it.value }?.value?: 0.0),
+            (list.maxBy { it.value }?.value?: 0.0)
+        )
+        (entriesRenderer as? BarEntriesRenderer)?.setList(
+            list,
+            (gridRenderer.gridValues?.min?: 0.0),
+            (gridRenderer.gridValues?.max?: 0.0)
+        )
     }
 }

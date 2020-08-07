@@ -6,6 +6,7 @@ import android.graphics.RectF
 import android.text.TextPaint
 import androidx.annotation.ColorInt
 import com.mary.merrychart.charts.Grid
+import com.mary.merrychart.charts.GridValues
 import com.mary.merrychart.charts.createGridValues
 import com.mary.merrychart.utils.dp
 import com.mary.merrychart.utils.empty
@@ -14,7 +15,11 @@ import com.mary.merrychart.utils.toQuantityString
 
 internal class GridRenderer {
 
+    internal var gridValues: GridValues? = null
+        private set
     internal var grid: Grid? = null
+        private set
+
     internal var emptyText = String.empty()
 
     private val gridPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -50,20 +55,28 @@ internal class GridRenderer {
         yAxisTextPaint.textSize = size
     }
 
+    internal fun createValues(
+        minValue: Double,
+        maxValue: Double
+    ) {
+        val values = createGridValues(minValue, maxValue)
+        gridValues = GridValues(
+            values = values,
+            min = values.min()?: 0.0,
+            max = values.max()?: 0.0
+        )
+    }
+
     internal fun createGrid(
         canvas: Canvas,
         paddingStart: Float,
         paddingTop: Float,
         paddingEnd: Float,
-        paddingBottom: Float,
-        minValue: Double,
-        maxValue: Double
+        paddingBottom: Float
     ) {
-        val gridYValues = createGridValues(minValue, maxValue)
-
         val rowHeight = (canvas.height - paddingTop - paddingBottom - xAxisTextPaint.textSize
                 - X_AXIS_TEXT_PADDING.dp * 2) / 5
-        val maxValueLength = yAxisTextPaint.measureText((gridYValues.maxBy { it }?: 0.0).toQuantityString())
+        val maxValueLength = yAxisTextPaint.measureText((gridValues?.max?: 0.0).toQuantityString())
         val textYCenter = (yAxisTextPaint.textSize + (yAxisTextPaint.descent() + yAxisTextPaint.ascent()) / 2) / 2
 
         grid = Grid(
@@ -73,10 +86,7 @@ internal class GridRenderer {
             endY = paddingTop + Y_AXIS_TEXT_PADDING.dp - textYCenter + (rowHeight * 4),
             rowHeight = rowHeight,
             textYCenter = textYCenter,
-            maxTextLength = maxValueLength,
-            minValue = gridYValues.minBy { it }?: 0.0,
-            maxValue = gridYValues.maxBy { it }?: 0.0,
-            values = gridYValues
+            maxTextLength = maxValueLength
         )
     }
 
@@ -109,6 +119,7 @@ internal class GridRenderer {
             xAxisTextPaint
         )
         grid = null
+        gridValues = null
     }
 
     internal fun drawGrid (
@@ -119,7 +130,7 @@ internal class GridRenderer {
         paddingBottom: Float
     ) {
         grid?.let { entityGrid ->
-            entityGrid.values.forEachIndexed { index, value ->
+            gridValues?.values?.forEachIndexed { index, value ->
                 val textLength = yAxisTextPaint.measureText(value.toQuantityString())
                 val xDiff = if(entityGrid.maxTextLength > textLength)
                     (entityGrid.maxTextLength - textLength) / 2

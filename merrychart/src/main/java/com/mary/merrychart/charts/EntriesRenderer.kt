@@ -28,10 +28,13 @@ internal abstract class EntriesRenderer<T: Entry> {
         entryPaint.color = color
     }
 
+    protected abstract fun calculateEntriesDiff(
+        gridMinValue: Double,
+        gridMaxValue: Double
+    )
+
     internal abstract fun draw(
         canvas: Canvas,
-        gridMinValue: Double,
-        gridMaxValue: Double,
         gridStartX: Float,
         gridEndX: Float,
         gridStartY: Float,

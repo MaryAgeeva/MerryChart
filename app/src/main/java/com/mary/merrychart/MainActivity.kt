@@ -34,6 +34,35 @@ class MainActivity : AppCompatActivity() {
                         color = this@MainActivity.color(R.color.green)
                     ),
                     BarChartEntry(
+                        position = 5,
+                        value = 35.0,
+                        xLabel = "First",
+                        color = this@MainActivity.color(R.color.red)
+                    ),
+                    BarChartEntry(
+                        position = 6,
+                        value = 25.0,
+                        xLabel = "Second",
+                        color = this@MainActivity.color(R.color.yellow)
+                    ),
+                    BarChartEntry(
+                        position = 7,
+                        value = 20.0,
+                        xLabel = "Third",
+                        color = this@MainActivity.color(R.color.green)
+                    ),
+                    BarChartEntry(
+                        position = 8,
+                        value = 25.0,
+                        xLabel = "Fourth"
+                    ),
+                    BarChartEntry(
+                        position = 9,
+                        value = 30.0,
+                        xLabel = "Fifth",
+                        color = this@MainActivity.color(R.color.colorAccent)
+                    ),
+                    BarChartEntry(
                         position = 3,
                         value = 25.0,
                         xLabel = "Fourth"

@@ -27,9 +27,12 @@ class BarChart @JvmOverloads constructor(
     }
 
     fun configure(config: Config) {
-        config.list?.let { list ->
-            chartRenderer.setEntriesList(list)
+        Log.d("BarChart", "list set: ${measureTimeMillis { 
+            config.list?.let { list ->
+                chartRenderer.setEntriesList(list)
+            }
         }
+        }")
         config.valueFormatter?.let { formatter ->
             chartRenderer.setValueFormatter(formatter)
         }

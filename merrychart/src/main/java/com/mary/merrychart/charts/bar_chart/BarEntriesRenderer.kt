@@ -15,14 +15,21 @@ internal class BarEntriesRenderer(
     private val context: Context
 ) : EntriesRenderer<BarChartEntry>() {
 
+    private val entriesMap: HashMap<BarChartEntry, Double> = hashMapOf()
+
     internal var entryWidth = DEFAULT_ENTRY_WIDTH.dp.toFloat()
 
     private val xAxisTextPaint = TextPaint(TextPaint.ANTI_ALIAS_FLAG).apply {
         textSize = DEFAULT_X_TEXT_SIZE.sp
     }
 
-    internal fun setList(list: List<BarChartEntry>) {
+    internal fun setList(
+        list: List<BarChartEntry>,
+        gridMinValue: Double,
+        gridMaxValue: Double
+    ) {
         entriesList = list.sortedBy { it.position }
+        calculateEntriesDiff(gridMinValue, gridMaxValue)
     }
 
     internal fun setXTextColor(@ColorInt color: Int) {
@@ -33,10 +40,18 @@ internal class BarEntriesRenderer(
         xAxisTextPaint.textSize = size
     }
 
+    override fun calculateEntriesDiff(
+        gridMinValue: Double,
+        gridMaxValue: Double
+    ) {
+        entriesMap.clear()
+        entriesList.forEach { entry ->
+            entriesMap[entry] = (entry.value - gridMinValue) / (gridMaxValue - gridMinValue)
+        }
+    }
+
     override fun draw(
         canvas: Canvas,
-        gridMinValue: Double,
-        gridMaxValue: Double,
         gridStartX: Float,
         gridEndX: Float,
         gridStartY: Float,
@@ -53,8 +68,6 @@ internal class BarEntriesRenderer(
             entry.draw(
                 canvas,
                 (gridStartX + startColumnOffset + position * columnWidth),
-                gridMinValue,
-                gridMaxValue,
                 gridStartY,
                 gridEndY
             )
@@ -64,8 +77,6 @@ internal class BarEntriesRenderer(
     private fun BarChartEntry.draw(
         canvas: Canvas,
         offset: Float,
-        gridMin: Double,
-        gridMax: Double,
         gridYMin: Float,
         gridYMax: Float
     ) {
@@ -74,7 +85,7 @@ internal class BarEntriesRenderer(
         else if(color == 0 && entryPaint.color != context.color(DEFAULT_ENTRY_COLOR))
             entryPaint.color = context.color(DEFAULT_ENTRY_COLOR)
 
-        val diff = (value - gridMin) / (gridMax - gridMin)
+        val diff = entriesMap[this]?: 0.0
         val entryHeight = (gridYMax - gridYMin) * diff
         val text = valueFormatter?.invoke(value)?: value.toQuantityString()
         val textLength = entryTextPaint.measureText(text)
@@ -110,14 +121,14 @@ internal class BarEntriesRenderer(
     private companion object {
         private val DEFAULT_ENTRY_COLOR = R.color.blue
 
+        private const val DEFAULT_X_TEXT_SIZE = 10f
         private const val X_AXIS_TEXT_PADDING = 8f
         private const val ENTRY_TEXT_PADDING = 6f
 
         private const val DEFAULT_RADIUS = 8f
 
         private const val DEFAULT_ENTRY_WIDTH = 8f
-        private const val VISIBLE_ENTRIES_LIMIT = 10
 
-        private const val DEFAULT_X_TEXT_SIZE = 10f
+        private const val VISIBLE_ENTRIES_LIMIT = 10
     }
 }
